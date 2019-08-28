@@ -1,0 +1,95 @@
+# Login to Azure
+az login 
+
+# Create a resource group
+az group create -n K8Group -l southeastasia
+
+# Confirm group creation by listing it
+az group list -o table
+
+# Create Kubernetes Cluster
+az aks create --name k8scluster --location southeastasia -g K8Group --enable-addons monitoring --generate-ssh-keys --node-count 2
+
+# Install Kubernetes CLI
+az aks install-cli
+
+# Authenticate to KBS cluster
+az aks get-credentials -n k8scluyster -g K8Group
+
+# Verify the kubectl configuration
+kubectl config view
+
+# List the nodes
+kubectl get nodes
+
+# List of pods
+kubectl get pods
+
+# List the replica set
+kubectl get rs
+
+# List the services
+kubectl get svc
+
+# List the deployments
+kubectl get deploy
+
+# Deploy insurance service
+kubectl apply -f ./yaml/insuranceportal-service.yaml 
+
+# Deploy insurance service
+kubectl apply -f ./yaml/insuranceportal-deploy.yaml 
+
+# Replace deployed insurance service
+kubectl replace -f ./yaml/insuranceportal-deploy.yaml 
+
+# Create the secret
+kubectl create secret generic mssql --from-literal=SA_PASSWORD="Labuser@123456"
+
+# To get the secret
+kubectl get secret
+
+#create pvc
+kubectl apply -f ./yaml/sqlserver-pvc.yaml
+
+kubectl get pvc
+
+# Deploy sql server
+kubectl apply -f ./yaml/sqlserver-deploy.yaml
+
+kubectl get deploy
+
+kubectl get pods
+
+# Deploy service for sql server
+kubectl apply -f ./yaml/sqlserver-service.yaml
+
+kubectl get svc
+
+# Deploy service for event api
+kubectl apply -f ./yaml/eventapi-service.yaml 
+
+# Deploy service for event api
+kubectl apply -f ./yaml/eventapi-deploy.yaml 
+
+kubectl get pods
+
+# View the pod logs
+kubectl logs "event-deploy-67556d79dd-lkpj2"
+
+kubectl get svc
+
+# Describe the service
+kubectl describe svc eventsvc
+
+# Deploy service for identity api
+kubectl apply -f ./yaml/bus-book-system-order-service.yaml 
+
+# Deploy service for identity api
+kubectl apply -f ./yaml/bus-book-system-order-deploy.yaml
+
+# To view the cluster as the UI
+az aks browse -n k8scluster -g k8Group
+
+# To assign a role to current user
+Kubectl apply -f ./yaml/dashboard-admin.yaml

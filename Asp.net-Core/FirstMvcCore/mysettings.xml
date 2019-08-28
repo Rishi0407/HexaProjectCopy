@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configData>
+  <Company>Hexaware</Company>
+  <Location>Mumbai</Location>
+  <Address>
+    <City>Navi Mumbai</City>
+    <BuildingNo>152</BuildingNo>
+  </Address>
+  <Message>I am from XML</Message>
+</configData>

@@ -1,0 +1,10 @@
+{
+  "ProjectName": "HexaVersity",
+  "Duration": 10,
+  "ProjectManager": "Ajay Khakhonje",
+  "Courses": {
+    "Title": "Microservice development using .net core",
+    "NoOfParticipant": 23
+  },
+  "Message": "I am form JSon file"
+}
