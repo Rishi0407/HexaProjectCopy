@@ -1,0 +1,979 @@
+.net core
+
+1.cross platform support:able to run on diff platform (ex.sql version for windows o.s. is diff from sql version installed on linux )
+2.open source
+3.nuget package based
+4.Light weight
+5.No dependency on IIS module
+6.Current stable version 2.2.x supports only ASP.NET Core and UWP app
+7.dotnet CLI support
+
+cross platform is diff from platform independent
+
+paltform independent: code compiled on windows o.s. machine will work on machine with linux o.s.
+
+
+why .net core
+A:- to develop and deploy app on cloud
+
+*current IT trend
+microservice
+Docker and containerization
+cloud based deployment
+
+Dotnet CLI command
+	-dotnet --version
+	-dotnet new -n "projectname" -o "outputfolder"
+
+.net core
+
+-Middleware
+	-request pipeline is created witha set of middleware(configure())
+	-middleware is a function that execute when request comes and response goes
+	-middleware can be applied using Use() method, Run() method, Map() method, mapWhen() method.
+	-Run()
+		-This is the request terminator
+	-
+
+
+**Built in middleware
+	-staticfiles
+	-DirectoryBrowser
+	-DefaultFiles
+	-Server side exeception handling -status code-500
+		-Development
+			UseDeveloperExceptionPage()
+			-Production
+				UseExceptionHandlerPage()
+					-With exception handler
+
+
+
+-Host
+	-Host the ASP.NET core app with or without IIS
+	-Kestral is a built-in web server
+	-Two types of host in .net core
+		-Web Host
+			-Used by web app that runs on http or https
+		-Generic Host
+			-Used to run backgroung task app that does not require http/https
+			-No user interaction
+	-Configure running environment
+		-Configure web server(kestral)
+		-Configure app
+			-Configure the configuration sources
+			-Configure the staticFile folder
+		-Configure logging
+-Configuration sources
+
+
+**Dependency Injection
+-Scopes
+	-Singleton()
+	-Scoped()
+	-Transient()
+
+
+
+	
+-MVC
+	-Tag helpers
+		-built in tag helpers
+		-custom tag helpers
+		-imported tag helpers in _ViewImport.cshtml using addTagHelpers
+	-Caching
+		-why
+			-Each time client request for the data the data it loads from datasource.
+			-To improve the performance of the app we can cache the data in nearby storage which is easy to acces
+		-how?
+			-Responce cache
+				-.net framework use outputcache attribute
+				-.net core uses [ResponseCache] attribute
+			-InMemory Cache
+				-Cache.Insert(), Cache.Add() in .net framework
+				-InMemoryCache
+			-Distributed Cache
+				-IDistributedCache interface
+				Storage
+					-SqlServer
+					-RedisCache
+					-InMemory Distributed Caching (only for Dev and test)
+
+
+-State mgmt
+	-QueryString
+	-Hidden fields
+	-ViewBag,ViewData
+	-TempData
+		-In .net core there are two tempdata providers
+			-cookie based
+				-default tempdata provider
+			-session based
+	-Cookies
+		-Temp text files created by client browser.
+		-Travels from server to client and visa versa.
+		-Server controller action creates cookie and attaches it to the Response.
+		-When resp reaches to the browser it stores cookie in client machine.
+		-When next req goes to the server, browser attache all cookie along with req.
+		-Security is compromised
+	-Session
+		-Any one of the distributedCache must be configured to use session.
+		-Enable the sesion service in the configureservices() method. services.AddSession()
+		-By default not enabled.
+		-Configure session middleware in the Configure(). app.UseSession()
+		-To access session in controller we need to use, HttpContext.Session["key"]
+	-DI
+		-create a singleton instance of a sevice that can share 
+	-HttpContext.Items
+		-Pass data from middleware to controller action.
+
+	-EF
+		-ORM tool
+		-EF 6 (EF core 2.2)
+		-Code migrations
+		-DbContext class contains DbSet<Model> properties that acts like tables
+		-LINQ methods return the records as object or object collection
+		-To save data into table we call Add() then Save()
+		-Create a DbContext object that acts like a database object
+		-In model classes we can apply model validation parameters
+			-Code First
+			-DB first
+		-EF core in .net core
+			-In-Memory DB
+			-SqlServer DB
+
+		-code first migration command
+			VS PS:add-migration "InitialCreate"
+			CLI: dotnet ef migrations add "InitialCreate"
+				-Create migration files
+			VS PS: update-database
+			CLI: dotnet fe database update
+
+
+
+***Microservices
+	-Monolithic Application
+		-Dis
+			1.Tightly coupled
+			2.Scaling of individual module is not possible
+			3.Security
+			4.Choice of language and framework
+			5.Resilency is less
+			6.Redeployment of individual module not possible
+			7.Difficulty to use polyglot persistance
+	-Microservice
+		-A service that can be developed,tested ,deployed without affecting other modules of the app.
+		-Distributed architecture.
+		-All services accessible using well defined communication endpoints such as REST endpoint
+		-Other communication approaches also used.
+			-Msg based communication
+			-Event driven architecture
+		Microservice communication
+			-Sync
+				-REST
+					-Both sender and receiver must be online
+					-Its a real time communication
+					-Always a resp send back to the sender
+					-Always 1 to 1 communication
+			-Async
+				-Message based communication (queue)
+					-It is not mandatory that sender and receiver to be online
+					-Its not a real time communication
+					-May not send a resp back to the sender
+					-Msgs are stored in queue within the msg broker service
+					-1 to many communication is possible
+				-Event driven architecture
+					-It is real time
+					-1 to many is possible
+					-Not mandatory to send a resp/subscribe the event
+
+	-SOA
+		-Share common DB
+
+
+Event API
+	-Add event
+	-Search
+	-Get event by Id
+	-Add event(auth)
+	-Delete event(auth)
+	-Update event(auth)
+	-Register for event(auth)
+
+Identity API
+	-Register
+	-Login
+	-Manage profile
+
+Angular UI
+	-List events
+	-Allow user to register
+	-Allow user to login
+
+
+Http headers
+	request
+		Content-Type:MIME type of the data which you are sending to server
+		Accept: tells the server what type of resp data client expects
+	response
+		Content-Type: MIME type of data which server is sending to client in resp body
+		
+	major type/minor type
+	major types:
+		text-All text type data which is unicode and ascii
+			text/xml
+			text/json
+			text/css
+			text/html
+			text/plain
+		audio
+			audio/mp3
+			audio/midi
+			audio/wma
+		video
+			video/wma
+		image
+			image/jpg
+
+
+-API documentation
+	-Open API specification
+		-NSwag
+		-Swagger
+
+	
+
+Relational DB
+	-Structured table
+	-Sql query
+	-FK
+	-join
+NoSQL data storage
+	-Unstructured
+	-No SQL types
+		-Document storage
+			-MongoDB
+			-DocumentDB (Sql core)
+		-KeyValue pair
+			-Azure table storage
+		-Graph DB
+			-Gremlin
+			-Neo4j
+		-Column family
+			-Casandra
+	
+
+
+
+Docker
+	-What
+		-Containerization technology/software to containerize app.
+		-Docker is available for windows , linux and mac
+		-Docker supports windows and linux containers
+			-Docker desktop for windows uses a VM to run Linux containers
+			-we can switch between linux and windows containers
+	-why
+		Containerization
+			-soft: Docker,RKT, LXD, LXC
+
+
+-docker compose
+	-multi container deployment
+	-uses a declarative model with YAML file
+	-YAML file extension can be .yaml or .yml
+	- docker composes yaml file name is 'docker-compose.yaml'
+	-optionally we can use .env file to define the environmet variable values.
+
+docker repository 
+	-you have to follow a naming convension
+	-image name should be 
+		<dockeraccountid>/<imagename>:<tag>
+		eg: harshalshahane/eventmanagement:latest
+	docker build -t harshalshahane/eventmanagement:latest .
+	docker push harshalshahane/eventmanagement:latest
+	docker pull harshalshahane/eventmanagement:latest
+
+docker account:
+(harshalshahane/Docker@2019)
+
+steps
+create Dockerfile inside proj folder
+create .dockerignore file inside proj folder
+login to cmd prompt as below
+	>docker login (enter username and pswd)
+	>docker build -t harshalshahane/eventmanagement:latest .
+	>docker push harshalshahane/eventmanagement:latest
+
+
+***************************************************************
+Azure
+
+What?
+	-cloud is a set of interconnected datacenters with pool of resources that can be accessible over internet.
+	cloud types
+		-private
+			-cisco, HP
+
+		-public
+			-Azure, AWS,Google cloud
+		-hybrid
+
+	-cloud services models
+		-IaaS-Infrastructure as a service
+			-cloud vendor is providing infra services such as network, virtual machine(compute),storage(disk)
+			firewall, IP address
+			-IT pro (admin) will be using such services
+		-Paas-Platform as a service
+			-Preconfigured platform
+			-developers
+		-SaaS-software as a service
+			-software is available as a service
+			-office365, dynamic CRM, googleDrive,gmail,skype
+Why?
+	-OnPremise data center.
+		-Infrastructure cost
+		-backup
+		-Disaster recovery
+		-security and compliance
+		-scaling
+		-global reach
+
+	-cloud
+		-pooled resources
+		-built-in security and compliance
+		-built-in backup
+		-disaster recovery as a service
+		-scale in seconds
+		-global reach and georeplication
+		-pay per use (pay as you go)
+		-automatic monitoring and auditing(alerts)
+How?
+	-Microsoft azure
+	-Data centres/Regions/Location
+		-54+ regions
+		-India have 3 data centers, 
+			-Channai
+			-Pune, -Mumbai
+		-
+		-Azure has datacetres in China but are accessible to chinese
+	-Subscription
+		-Agreement between customer and microsoft
+		-subscription type
+			-pay as you go
+			-enterprise agreement
+			-free subscription 		
+				-free trail
+				-recurring subscription
+	-Deployment model
+		-Azure resource manager model(ARM model)
+		-resource group
+			-Logic grouping of one or more services
+	-How to work with Azure
+		-IaaS- VM,VNET,IP,Disk,Traffic manager, Application Gateway,VMSS
+			Availability set.
+		Storage account, CosmosDB, SQL database
+		-How to connect and create Azure services?
+			-Web portal (https://portal.azure.com)
+				-Used by beginners
+				-provides a UI for creating and managing services
+			-Command Line Tools
+				-Used by IT pro
+				-PowerShell version >5.0
+					-primarilt for Windows users
+					-Now, PowerShellCore for Linux also.
+				-Cross Platform Command Line(Azure CLI)
+					-Windows
+					-Linux
+					-Mac
+			-Azure SDK
+				-Used by developers
+				-SDK is available for all languages such as .net, java, php, python, nodejs etc
+			-ARM template
+				-These are JSON template
+				-It is a declarative way of creative resources.	
+				-A single cmd can be used to create a group of resources.
+			-RESTful services
+				-All instructions are executed in azure as REST services
+				-When we use SDK, Powershell, CLI, ARM, template they always make a REST call.
+				-Developers can also make direct calls to those REST services.
+			
+	-Storage Account
+		-One of the primary service in azure
+		- storage options in storage account
+			-blob storage
+				-used for storing unstructured blob files such as audio, images,video, text ,document, executable files.
+			-file share
+				-similar to blob service.
+				-it uses an SMB 3.0 protocol to map the fileshare as a network drive in our personal machine
+			-queue
+				-used to implement app to app integration using text msg.
+				-one to many messaging with offline communication feature.
+				-one msg size is maximum 64 kb (service bus queue msg can have upto 256kb)
+				-TTL (time to leave) for msg 7 days(service bus TTL is 14 days)
+				-FIFO is not guaranteed (service queue FIFO is guaranteed)
+				-Partitioning of msg is not possible (SB queue supports it)
+				
+			-table
+				-NoSQL db storage in storage 
+				-store data in key value pair
+				-every record is called as entity
+				-every entity must have a rowkey and a partitionkey and timestamp value
+				-one entity can have a 256 attributes (key)
+					-256-3 = 253 keys
+
+		-storage account
+			-V1
+				-performance: standard+ premium
+				-access tier: not available
+				-all 4 service models available(blob, file, queue, table)
+			-blob
+				-performance:only standard available
+				-access tier: hot and cool available
+		-Replication
+			-LRS (local redundant storage)
+			-ZRS- zone redundant
+			-GRS- geo replication
+			-RAGRS-
+
+	-blob
+		-container-Root storage place
+		-container access policy
+			-Blob
+				-You can anonymously access files (blob) without any key or token
+				-Use file URL to access it.
+				-Url:https://<storageaccname>.blob.core.windows.net.<container>/<file>
+				-directory browsing is not allowed
+			-Container
+				-You can anonymously access files (blob) without any key or token
+				-blob listing (dir browsing) is supported
+			-Private
+				-Anonymous access not allowed
+				-need an access token to access files
+				-it is secure than other modes
+
+		-credentials
+			-Access keys
+			-Token (SAS token) shared
+
+	-App Services
+		-This is a compute service used to deploy the web app on azure
+		-App service
+			-Web app
+				-Web app icluding asp.net mvc,java,php,nodejs etc
+			-API app
+				-Used to deploy REST and webservices app.
+			-Mobile app
+				-Used to deploy mobile app backend services
+
+		-PaaS service configured with all kinds of lang and framework
+		-Web app
+			-Unique web app name
+				-https://<webappname>.azurewebsites.net
+			-location-where to deploy
+			-App service plan
+				-Pricing model
+				-Instance size(VMSize)
+			-Application insights (monitoring tool) - optional
+			-Pricing model
+				-Free
+					-No cost
+					-No SLA (service level agreement)
+					-Dev and test
+					-No dedicated machine (using shared machine)
+					-No custom domain
+					-No deployment slots
+				-Shared
+					-Custom domain mapping
+					-not free (a minor amount to be paid)
+				-Basic
+					-Dedicated machine (A series VM)
+					-SLA 99.99%
+					-manual 3 scaling possible
+				-Standard
+					-Recommended for production
+					-5 Deployment slots
+					-Daily backup 10 times
+					-Traffic manager
+					-S1,S2,S3 versions
+					-Auto scaling 
+				-Premium
+					-20 deplyment slots
+					-Daily 50 times backup
+					- P1, P2, P3 -> P1V1,P2V2,P3V3 (D series VM)
+				-Isolated (ASE)
+					-Creating the app service VM in a dedicated (isolated) netwotk
+
+		-Deploy web app
+			-Visual studio Publish (web deploy)
+			-VS Code (AppService extension)
+			-FTP
+			-Deployment Center (CI/CD)
+		-Scaling
+			-Scale up (vertical scaling)
+				-Increase the size of the VM
+				-Increase the SKU (s1->s2) (s1->p1) (B1->s2)
+			-Scale out (horizontal scaling)
+				-Increase the no. of instances
+				-This automatically creates a LB to distribute the req to all instances
+			-Types of scaling
+				-Manual
+				-Automatic 
+					-Need to specify the scaling condition
+					-Scaling condition is applied based on a metric
+						-CPU %
+						-Disk utilization
+						-http req
+						-msg in storage queue or SB queue
+
+		-Deployment slots
+			-Deployment slots allows you to create staging env or testing env for your app
+			-by default only prod slot is created
+			-we can create one or more slots for staged deployment and staging
+			-once the deployment is done in staging slot we can do a virtual swapping.
+			-swapping can be manual swapping or auto swapping
+
+
+	-Cosmos DB
+		-planet scale, geo distributed, multi-model db
+		-DB service on cloud platform
+		-NoSQL type db service
+			-document
+				-mongodb
+				-documentation
+			-graph
+				-gremlin
+			-keyvalue
+				-azure table
+			-column family
+				-cassandra
+		-while creating a cosmosdb account we can specify the type of api need to be used.
+			-mongodb
+			-documentdb (sql api)
+			-cassandra
+			-gremlin
+			-azure table api
+		-geo replication
+			-replicate to one or more locations in a single click.
+		-SLA(service level agreement)
+			-all other azure services provide SLA of 99.99% for high availability
+				-high availability
+				-throughput
+				-consistency
+				-latency
+			-it uses high speed ssd disk for storage
+
+		-Throughput
+			-RU -req unit
+			-
+	sample code
+		https://github.com/microsoftdocs/azure-docs/blob/master/articles/cosmos-db/sql-api-dotnet-samples.md
+	
+	-Serverless Computing
+		- no dedicated instances of VM allocated
+		-compute resources are allocated when the req comes
+		-when the req execution complete it deallocates the resources
+		-billing is based on no. of req* duration
+		-severless azure services
+			-ACI- Azure Container Instances
+			-Azure Function App
+			-Azure Logic App
+
+		-ACI
+			-used to run containers in a serverless mode
+			-it can run one docker container per instance
+		
+		
+		-Logic App
+			-It is a serverless service for creating integration services on azure
+			-it is used for creating workflow app on azure
+			-it is also called IPaas (integration pass)
+			-logic app provides a visual designer for creating workflow
+			-you can integrate multiple SaaS app in a workflow
+			-SaaS connectors
+				-Triggers and actions
+			-Trigger types
+				-Push
+					-Http, WebHook triggers 
+				-Pull
+				-Reccurance
+
+
+	-Azure function app
+		-function app is also a servicesless computing service
+		-code based, c#, JS , Java, Python etc
+		-functions also use triggers to start execution
+			-Bindings
+				-Input bindingd
+					-Trigger is also a type of input binding
+				-output binding
+			-There can be zero or more input and output bindings
+		-Two versions of function app runtime available
+			-V1- .net framework based
+			-V2- .net core based
+
+	-develop function apps
+		-Azure portal
+		-write using function app runtime in local machine
+			-function app CLI can be used to create build, run, test and deploy
+			npm install -g azure-function-core-tools
+		
+		
+	-Pricing
+		-Consumption plan
+			-it is the exact serverless pricing model-no of req*duration
+			-no dedicated VM instance allocated for it.
+			-default max execution time is 5 min, you can update this upto 10 min
+		-Appservice plan
+			-we dont need to pay additionally for functionApp. Because our function will be executing within the AppService Plan.
+			-no timeout for the function execution
+			-you must enable "Always On"
+
+
+-Azure Kubernetes service
+	-What is Orchestrator?
+		-It is a tool/software used to manage and monitor the clustered env
+		-It performs automatic patching,scaling, redeploy, backup, security etc.
+		-Docker cluster orchestrator
+			-Kubernetes
+			-DC/OS
+			-DockerSwarm
+		-Non-docker cluster orchestrator
+			-Azure service Fabric			
+	-What is Kubernetes(KBS)			
+
+google introduced kubernates
+
+Kubernetes cluster
+	-Orchestrator -Kubernetes
+	-Used for deploying containerized app
+		-Containerized app can be monolithic or microservice
+	-it is docker cluster
+	-there will be a master node and more than one worker nodes
+		-master-worker architecture
+		-master node contains the orchestrator service and cluster mgmt services
+
+SF cluster
+	-Orchestrator-SF
+	-It can deploy only microservice app not monolithic app
+		-It can deploy contenerized and non contenerized app
+		-it can deploy app which is developed using SF SDK
+	-it is a microservice cluster
+	-there is no master node, it uses only worker nodes
+		-every worker node is also master node
+
+	why it is required
+	what is kubernetes cluster
+	what is azure kubernates service
+		-AKS is managed kubernates cluster
+		-ACS (old service, now deprecated) is an example for unmanaged kubernetes cluster
+			-ACS provides option for selecting orchestrator type
+
+
+
+	-azure api mgmt gateway (api gateway)
+		-challenges in api deployment
+			-list of urls
+			-security for apis
+			-monitoring
+			-caching can't be implemented after deployment
+			-req limiting
+			-mocking of services
+			-req transformation
+			-set/remove header values
+		-we can use an intermediatory component/service called api gateway
+		-components of gateway
+			-publisher portal (azure portal is now providing all functionalities of publisher portal) 
+				-API publisher can configure the policies for operations, API and products
+				-View all subscription req and he can approve or cancel it.
+			-Developer gateway
+				-Developer (consumer of API) can send subscription req for accessing API
+				-Once the publisher approves the req, developer will get a subscription key
+				-Subscription key need to be supplied with every req he makes to the API gateway
+			-Gateway
+				-Component that provides all features required for app(pts mentioned in challenges in api deployment)
+				-we will be implementing a set of policies
+					-Caching policy
+					-CORS policy
+					-Transformation policy
+					-Mocking policy
+					-Set header policy
+					-JWT token validation policy
+			
+	
+
+Event Grid
+	-Communication strategies
+		-REST
+			-one to one
+			-real time
+			-always resp come back to client
+			-sender and receiver must be online
+		-async
+			-message
+			- we use msg broker (rabbitMq, ServiceBus Queue, storage acc queue) 
+			-not real time
+			-one to many is possible
+			-not required that sender and receiver need to be online
+			-resp is not mandetory
+
+		-event based
+			-real time
+			-one to many
+			-no resp required
+			-sender and receiver must be online
+			-event arg can contain event data
+
+	-event grid is an azure managed service
+	-it helps you to implement event driven architecture in your app
+
+	-Azure DevOPs
+		-what is agile?
+		-what is Git?
+			-Git oper
+			-locally working on git
+			-uploading to remove git repo
+		-Boards
+			-WorkItem
+			-Status
+		-Repos
+			-Multiple repos
+			-Create branches
+			-create branch from workitem
+		-pipeline
+			-Build pipeline
+				-whenever a code is pushed unto repo, we need to compile and build the artifacts for the app
+				-output of build pipeline is build artifact
+				-build process can be
+					-automated -continues integration
+					-manual						
+			-release pipeline
+				-service connections
+				-continues deployment trigger
+			
+			
+	-Service Fabric
+		-what is SF?
+			-A fremewok/SDK for developing microservices.
+			-A azure service which helps you to deploy SF app.
+		-If you want to develop microservices using SF, you need to follow the SF deve pattern
+			-We can create 4 types of services
+				-Stateful
+				-stateless
+			-Reliable actor
+			- guest executable
+			-containers
+		-service fabric emulators
+			-local dev (offline)
+			-service fabric local cluster manager
+			-1 node cluster, 5 node cluster
+		-SF cluster
+			-no master
+			-system service(cluster services)
+				-cluster manager
+					-to manage the SF cluster -deployment of services
+				-naming service
+					-for name resolution of services
+					-we use .net remoting as communication
+						fabric:/servicename-> IP address
+				-failover manager
+					-responsible for failover of nodes
+					-if one nodes goes down it creates a new node
+				-imagestore
+					
+				-faultanalysis services
+
+
+---------------------------------------------------------------
+some imp comands
+#file:k8s.azcli
+
+#azure login
+az login
+
+#create resource group
+az group create -n K8SGroup -l southeastasia
+
+#confirm group creation
+az group list -o table
+
+#create kubernetes cluster 
+az aks create --name k8scluster --location southeastasia -g K8SGroup --enable-addons monitoring --generate -ssh-keys --node-vm-size Standard_D1 --node-count 3
+--------------------------------------------------------------
+Eshop
+	CatalogAPI
+		docker run -p 8090:80 catalogapi:latest
+	IdentityAPI
+		docker run -p 8091:80 identityapi:latest
+	
+Dcoker-compose
+	-YAML
+	Run multiple containers together
+
+
+	SQL 				MongoDB
+	database				database
+	tables				collections
+	record				document
+
+
+	
+		
+
+
+****git acc***
+
+git init
+git add .
+git commit -m "create" :
+git branch :list branches
+git status :
+git checkout <branchname> :create/switch new branch
+git merge <branchname> : to merge branch
+git reset --hard <id>
+git log
+git remote add origin "origin name" : create azure repo
+git push -u <branch> : to upload code from "branch" branch
+git push -u --all : to upload code from all branch 
+
+
+
+HarshalDev/Harshal@2019
+exe below cmd after any changes to app
+1.git add .
+2.git commit -m "initial"
+3.git push -u origin master
+
+
+
+*****web app******
+--first deploy code on github using below steps.
+1. build angular ui app using "ng build" command
+2. push dist folder code on github.
+	follow below steps
+	1.open cmd prompt, goto respective path (inside dist folder)
+	1.git init
+	2.git add . (. is part of cmd)
+	3.git commit -m "message" 
+		-create new repo on github
+		-copy above created repo path
+		-git remote add origin "origin name"
+		-git push -u origin master
+----steps for azure portal
+1.goto app service
+2.create web app
+3. select appropriate settings (for publish select code settings, select appropriate OS setting)
+4. goto azure portal deployment center
+5.select github (login may require)
+6.press continue button
+7.select app service build service
+8.continue
+9.select organization as github account
+10. select repository as github repo into which code is deployed
+11.select branch
+12. continue
+13.finish
+
+
+*******API Management*****
+1.create
+2. fill necessary details (select appropriate pricing tier. do not check enable insight checkbox)
+3.create
+
+
+********logic app***********
+Eg: create logic app for sending queue msg.
+
+1.create storage acc if not exists
+2.fill required details if, creating new storage acc
+3.goto resource
+4.select services, queue for eg. (queue,files,tables,blobs)
+5.create queue
+6.enter queue name
+7.ok
+8.add message
+9.enter msg queue
+10.select expires in settings
+11.press ok button
+12. select storage explorer
+13.select newly created queue
+14.add message
+15.ok
+
+
+1.search logic app
+2.press create button
+3. fill appropriate details
+4.create 
+5.select blank logic app template
+6.search "azure queue" in search text
+7.select "when there are messages in a queue" trigger
+8.enter connection name
+9.select storage acc
+10. press create button
+11.select queue name
+12. adjust other settings
+13. new step
+14.search gmail
+15.select "send email" action
+16. it may ask for sign in
+17. make necessary send email settings. We can add dynamic expression.
+16.save
+
+***azure devops***
+
+steps for creating connection string that would be required in creating CICD pipeline
+1. select project setting 
+2.click service connection
+3.click new service connection
+4.select azure resource manager
+5.select Service Principal Authentication radio button
+6.enter details and press ok
+
+
+1. goto https://dev.azure.com
+2. click on new project
+3. enter project details
+4. click on Advanced
+5.select Git as version control
+6.select scrum as work item process
+7.create
+8.click Repos
+9. follow below steps
+	1.open cmd prompt, goto respective path (inside dist folder)
+	1.git init
+	2.git add . (. is part of cmd)
+	3.git commit -m "message" 
+		-git remote add origin https://48147@dev.azure.com/48147/NewResaleCarUI/_git/NewResaleCarUI (copied from newly 				created Repos window)
+		-git push -u origin --all
+10.check whether repos is created or not
+11. click on newly created project
+12.click on builds
+13. click on new pipeline
+14.click on classic editor link
+15.select azure repo git as a source, ream project, repository and default branch
+16. continue
+17.select ASP.NET Core (as per project)
+18. click apply
+19.enter pipeline details (select agent specification as vs2017-win2016 (depends on OS/ENV))
+20. click save
+21.click save again (only build pipeline save and queued)
+22. agent job settings can be changed or modified as per requirements
+23.click on triggers
+24.check enable continues integration checkbox
+25.click on save
+26.click on releases from left menu
+27.click on new release button
+28.select add an artifact
+29.select build as source type,project and source (build pipeline created from build new pipeline steps), keep rest as default
+30.click add button
+31. click add stage option
+32.select azure app development deployment
+33. click apply
+34. select default details and close window
+35.click on jobs and tasks link
+36.select app type as per OS 
+37.Select Azure subscription created from steps mentioned in "creating connection string that would be required in creating CICD pipeline (steps are mentioned above)" . Select app service name (created using azure app service portal)
+38. click save then ok
+39.create release from top left menu
+40.select  pipeline
+41.enter version
